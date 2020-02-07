@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_app/result.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,44 +15,47 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
 
+  final _questions = const [
+    {
+      'questionText': "What's your favorite color?",
+      'answers': ['black', 'red', 'green', 'white']
+    },
+    {
+      'questionText': "What's your favorite animal?",
+      'answers': ['Rabbit', 'Snake', 'Elephant', 'Tiger']
+    },
+    {
+      'questionText': "Who's your favorite instructor?",
+      'answers': ['max', 'Max', 'Maxx', 'MAX']
+    },
+  ];
+
   void _answerQuestion() {
     setState(() {
       _questionIndex += 1;
     });
+
+    if (_questionIndex < _questions.length) {
+      print('We have more questions');
+    }
     print(_questionIndex);
     print('Answer chosen');
   }
 
   @override
   Widget build(BuildContext context) {
-    const questions = [
-      {
-        'questionText': "What's your favorite color?",
-        'answers': ['black', 'red', 'green', 'white']
-      },
-      {
-        'questionText': "What's your favorite animal?",
-        'answers': ['Rabbit', 'Snake', 'Elephant', 'Tiger']
-      },
-      {
-        'questionText': "Who's your favorite instructor?",
-        'answers': ['max', 'Max', 'Maxx', 'MAX']
-      },
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('First App'),
         ),
-        body: Column(
-          children: <Widget>[
-            Question(questions[_questionIndex]['questionText']),
-            ...(questions[_questionIndex]['answers'] as List<String>).map((answer) {
-              return Answer(_answerQuestion, answer);
-            }).toList()
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(),
       ),
     );
   }
